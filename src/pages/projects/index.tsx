@@ -1,18 +1,10 @@
 import Prismic from '@prismicio/client';
-import Aos from 'aos';
-import 'aos/dist/aos.css';
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-import { useEffect } from 'react';
-import ContactForm from '../components/ContactForm';
-import Experience from '../components/Experience';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-import HomeHero from '../components/HomeHero';
-import Knowledge from '../components/Knowledge';
-import Projects from '../components/Projects';
-import { getPrismicClient } from '../services/prismic';
-import { HomeContainer } from '../styles/HomeStyles';
+import Header from '../../components/Header';
+import ProjectLink from '../../components/ProjectLink';
+import { getPrismicClient } from '../../services/prismic';
+import { ProjectsContainer } from '../../styles/ProjectsStyles';
 
 interface IProjeto {
   slug: string;
@@ -23,22 +15,18 @@ interface IProjeto {
   thumbnail: string;
 }
 
-interface HomeProps {
+interface ProjetoProps {
   projetos: IProjeto[];
 }
 
-export default function Home({ projetos }: HomeProps) {
-  useEffect(() => {
-    Aos.init({ duration: 1500 });
-  }, []);
-
+export default function Projects({ projetos }: ProjetoProps) {
   return (
-    <HomeContainer>
+    <ProjectsContainer>
       <Head>
-        <title>Home | Meu portifólio</title>
+        <title>Projetos | Meu portifólio</title>
         <meta
           name="description"
-          content="Sou um desenvolvedor Front-end e aqui apresento alguns projetos desenvolvidos por mim!"
+          content="Aqui apresento alguns projetos desenvolvidos por mim!"
         />
         <meta property="og:image" content="/ogimage.png" />
         <meta property="og:image:secure_url" content="/ogimage.png" />
@@ -46,19 +34,22 @@ export default function Home({ projetos }: HomeProps) {
         <meta name="twitter:image:src" content="/ogimage.png" />
         <meta
           property="og:description"
-          content="Sou um desenvolvedor Front-end e aqui apresento alguns projetos desenvolvidos por mim!"
+          content="Aqui apresento alguns projetos desenvolvidos por mim!"
         />
       </Head>
-      <Header />;
+      <Header />
       <main className="container">
-        <HomeHero />
-        <Experience />
-        <Projects projetos={projetos} />
-        <Knowledge />
-        <ContactForm />
+        {projetos.map(projeto => (
+          <ProjectLink
+            key={projeto.slug}
+            title={projeto.title}
+            type={projeto.type}
+            slug={projeto.slug}
+            imgUrl={projeto.thumbnail}
+          />
+        ))}
       </main>
-      <Footer />
-    </HomeContainer>
+    </ProjectsContainer>
   );
 }
 
